@@ -82,12 +82,12 @@ export default function Header() {
         <div className="relative">
           <Search
             size={18}
-            className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500"
+            className="absolute left-4 top-1/2 -translate-y-1/2 text-dashboard-textMuted"
           />
           <input
             type="text"
             placeholder="Search campaigns, ad sets, ads..."
-            className="w-full pl-11 pr-4 py-2.5 bg-dashboard-bg border border-dashboard-border rounded-xl text-sm text-white placeholder:text-gray-500 focus:outline-none focus:border-dashboard-accent/50 transition-colors"
+            className="w-full pl-11 pr-4 py-2.5 bg-dashboard-bg border border-dashboard-border rounded-lg text-sm text-dashboard-text placeholder:text-dashboard-textMuted focus:outline-none focus:border-dashboard-accent focus:ring-2 focus:ring-dashboard-accent/20 transition-colors"
             value={filters.search || ''}
             onChange={(e) => setFilters({ search: e.target.value })}
           />
@@ -100,7 +100,7 @@ export default function Header() {
         <div className="relative">
           <button
             onClick={() => setShowDatePicker(!showDatePicker)}
-            className="flex items-center gap-2 px-4 py-2.5 bg-dashboard-bg border border-dashboard-border rounded-xl text-sm text-gray-300 hover:border-dashboard-accent/50 transition-colors"
+            className="flex items-center gap-2 px-4 py-2.5 bg-dashboard-bg border border-dashboard-border rounded-lg text-sm text-dashboard-textSecondary hover:border-dashboard-accent transition-colors"
           >
             <Calendar size={16} />
             <span>{currentPreset?.label || 'Select dates'}</span>
@@ -113,7 +113,7 @@ export default function Header() {
                 className="fixed inset-0 z-40"
                 onClick={() => setShowDatePicker(false)}
               />
-              <div className="absolute right-0 top-full mt-2 w-48 bg-dashboard-card border border-dashboard-border rounded-xl shadow-xl z-50 py-2 animate-slide-down">
+              <div className="absolute right-0 top-full mt-2 w-48 bg-dashboard-card border border-dashboard-border rounded-lg shadow-xl z-50 py-2 animate-slide-down">
                 {datePresets.map((preset) => (
                   <button
                     key={preset.value}
@@ -121,7 +121,7 @@ export default function Header() {
                     className={`w-full px-4 py-2 text-left text-sm transition-colors ${
                       filters.dateRange.preset === preset.value
                         ? 'text-dashboard-accent bg-dashboard-accent/10'
-                        : 'text-gray-300 hover:bg-dashboard-hover'
+                        : 'text-dashboard-textSecondary hover:bg-dashboard-cardHover'
                     }`}
                   >
                     {preset.label}
@@ -136,7 +136,7 @@ export default function Header() {
         <button
           onClick={() => syncAllData()}
           disabled={isSyncing}
-          className="flex items-center gap-2 px-4 py-2.5 bg-dashboard-bg border border-dashboard-border rounded-xl text-sm text-gray-300 hover:border-dashboard-accent/50 transition-colors disabled:opacity-50"
+          className="flex items-center gap-2 px-4 py-2.5 bg-dashboard-bg border border-dashboard-border rounded-lg text-sm text-dashboard-textSecondary hover:border-dashboard-accent transition-colors disabled:opacity-50"
         >
           <RefreshCw size={16} className={isSyncing ? 'animate-spin' : ''} />
           <span>{isSyncing ? 'Syncing...' : 'Sync'}</span>
@@ -146,7 +146,7 @@ export default function Header() {
         <div className="relative">
           <button
             onClick={() => setShowNotifications(!showNotifications)}
-            className="relative p-2.5 bg-dashboard-bg border border-dashboard-border rounded-xl text-gray-400 hover:text-white hover:border-dashboard-accent/50 transition-colors"
+            className="relative p-2.5 bg-dashboard-bg border border-dashboard-border rounded-lg text-dashboard-textSecondary hover:text-dashboard-text hover:border-dashboard-accent transition-colors"
           >
             <Bell size={18} />
             <span className="absolute -top-1 -right-1 w-5 h-5 bg-dashboard-danger text-white text-xs font-bold rounded-full flex items-center justify-center">
@@ -160,38 +160,38 @@ export default function Header() {
                 className="fixed inset-0 z-40"
                 onClick={() => setShowNotifications(false)}
               />
-              <div className="absolute right-0 top-full mt-2 w-80 bg-dashboard-card border border-dashboard-border rounded-xl shadow-xl z-50 animate-slide-down">
+              <div className="absolute right-0 top-full mt-2 w-80 bg-dashboard-card border border-dashboard-border rounded-lg shadow-xl z-50 animate-slide-down">
                 <div className="p-4 border-b border-dashboard-border">
-                  <h3 className="font-semibold text-white">Notifications</h3>
+                  <h3 className="font-semibold text-dashboard-text">Notifications</h3>
                 </div>
                 <div className="max-h-80 overflow-y-auto">
                   {/* Notification Items */}
-                  <div className="p-3 hover:bg-dashboard-hover cursor-pointer border-l-2 border-dashboard-danger">
-                    <p className="text-sm text-white font-medium">
+                  <div className="p-3 hover:bg-dashboard-cardHover cursor-pointer border-l-2 border-dashboard-danger">
+                    <p className="text-sm text-dashboard-text font-medium">
                       Creative Fatigue Detected
                     </p>
-                    <p className="text-xs text-gray-400 mt-1">
+                    <p className="text-xs text-dashboard-textSecondary mt-1">
                       "Sonbahar Görsel 1" showing 45% performance drop
                     </p>
-                    <p className="text-xs text-gray-500 mt-1">2 hours ago</p>
+                    <p className="text-xs text-dashboard-textMuted mt-1">2 hours ago</p>
                   </div>
-                  <div className="p-3 hover:bg-dashboard-hover cursor-pointer border-l-2 border-dashboard-success">
-                    <p className="text-sm text-white font-medium">
+                  <div className="p-3 hover:bg-dashboard-cardHover cursor-pointer border-l-2 border-dashboard-success">
+                    <p className="text-sm text-dashboard-text font-medium">
                       Budget Recommendation
                     </p>
-                    <p className="text-xs text-gray-400 mt-1">
+                    <p className="text-xs text-dashboard-textSecondary mt-1">
                       Increase "Retargeting" budget for +30% conversions
                     </p>
-                    <p className="text-xs text-gray-500 mt-1">5 hours ago</p>
+                    <p className="text-xs text-dashboard-textMuted mt-1">5 hours ago</p>
                   </div>
-                  <div className="p-3 hover:bg-dashboard-hover cursor-pointer border-l-2 border-dashboard-warning">
-                    <p className="text-sm text-white font-medium">
+                  <div className="p-3 hover:bg-dashboard-cardHover cursor-pointer border-l-2 border-dashboard-warning">
+                    <p className="text-sm text-dashboard-text font-medium">
                       Audience Expansion
                     </p>
-                    <p className="text-xs text-gray-400 mt-1">
+                    <p className="text-xs text-dashboard-textSecondary mt-1">
                       Add İzmir & Bursa to reach 93% more users
                     </p>
-                    <p className="text-xs text-gray-500 mt-1">1 day ago</p>
+                    <p className="text-xs text-dashboard-textMuted mt-1">1 day ago</p>
                   </div>
                 </div>
                 <div className="p-3 border-t border-dashboard-border">
@@ -208,16 +208,16 @@ export default function Header() {
         <div className="relative">
           <button
             onClick={() => setShowProfileMenu(!showProfileMenu)}
-            className="flex items-center gap-3 pl-3 pr-4 py-1.5 bg-dashboard-bg border border-dashboard-border rounded-xl hover:border-dashboard-accent/50 transition-colors"
+            className="flex items-center gap-3 pl-3 pr-4 py-1.5 bg-dashboard-bg border border-dashboard-border rounded-lg hover:border-dashboard-accent transition-colors"
           >
             <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-dashboard-accent to-emerald-600 flex items-center justify-center">
               <User size={16} className="text-dashboard-bg" />
             </div>
             <div className="text-left">
-              <p className="text-sm font-medium text-white">YO Digital</p>
-              <p className="text-xs text-gray-500">Admin</p>
+              <p className="text-sm font-medium text-dashboard-text">YO Digital</p>
+              <p className="text-xs text-dashboard-textMuted">Admin</p>
             </div>
-            <ChevronDown size={16} className="text-gray-400" />
+            <ChevronDown size={16} className="text-dashboard-textSecondary" />
           </button>
 
           {showProfileMenu && (
@@ -226,13 +226,13 @@ export default function Header() {
                 className="fixed inset-0 z-40"
                 onClick={() => setShowProfileMenu(false)}
               />
-              <div className="absolute right-0 top-full mt-2 w-48 bg-dashboard-card border border-dashboard-border rounded-xl shadow-xl z-50 py-2 animate-slide-down">
-                <button className="w-full flex items-center gap-3 px-4 py-2 text-sm text-gray-300 hover:bg-dashboard-hover transition-colors">
+              <div className="absolute right-0 top-full mt-2 w-48 bg-dashboard-card border border-dashboard-border rounded-lg shadow-xl z-50 py-2 animate-slide-down">
+                <button className="w-full flex items-center gap-3 px-4 py-2 text-sm text-dashboard-textSecondary hover:bg-dashboard-cardHover transition-colors">
                   <Settings size={16} />
                   <span>Settings</span>
                 </button>
                 <div className="my-1 border-t border-dashboard-border" />
-                <button className="w-full flex items-center gap-3 px-4 py-2 text-sm text-dashboard-danger hover:bg-dashboard-hover transition-colors">
+                <button className="w-full flex items-center gap-3 px-4 py-2 text-sm text-dashboard-danger hover:bg-dashboard-cardHover transition-colors">
                   <LogOut size={16} />
                   <span>Sign out</span>
                 </button>

@@ -14,7 +14,7 @@ export default function DashboardLayout({
       <Sidebar />
 
       {/* Main Content */}
-      <div className="ml-[260px] min-h-screen">
+      <div className="ml-[240px] min-h-screen">
         {/* Header */}
         <Header />
 

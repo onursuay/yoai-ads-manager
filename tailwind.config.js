@@ -21,16 +21,24 @@ module.exports = {
           yellow: '#FBBC04',
           green: '#34A853',
         },
-        // Dashboard Theme
+        // Dashboard Theme - iyzads Style
         dashboard: {
-          bg: '#0A0E14',
-          card: '#12181F',
-          border: '#1E2832',
-          hover: '#1A2330',
-          accent: '#00D4AA',
-          warning: '#FFB547',
-          danger: '#FF6B6B',
-          success: '#4ADE80',
+          bg: '#0f1419',
+          card: '#1a1f2e',
+          cardHover: '#242b3d',
+          border: '#2a3441',
+          accent: '#00d4aa',
+          accentHover: '#00b894',
+          purple: '#8b5cf6',
+          orange: '#f97316',
+          pink: '#ec4899',
+          blue: '#3b82f6',
+          text: '#ffffff',
+          textSecondary: '#94a3b8',
+          textMuted: '#64748b',
+          success: '#00d4aa',
+          warning: '#f97316',
+          danger: '#ef4444',
         }
       },
       fontFamily: {

@@ -42,9 +42,9 @@ export default function CampaignTree({
   recommendations = {},
 }: CampaignTreeProps) {
   return (
-    <div className="card overflow-hidden">
+    <div className="bg-white border border-gray-200 rounded-lg shadow-sm overflow-hidden">
       {/* Table Header */}
-      <div className="grid grid-cols-12 gap-4 px-4 py-3 bg-dashboard-bg border-b border-dashboard-border text-xs font-semibold text-gray-400 uppercase tracking-wider">
+      <div className="grid grid-cols-12 gap-4 px-4 py-3 bg-gray-50 border-b border-gray-200 text-xs font-semibold text-gray-600 uppercase tracking-wider">
         <div className="col-span-4">Campaign / Ad Set / Ad</div>
         <div className="col-span-1 text-center">Status</div>
         <div className="col-span-1 text-right">Budget</div>
@@ -57,7 +57,7 @@ export default function CampaignTree({
       </div>
 
       {/* Campaign Rows */}
-      <div className="divide-y divide-dashboard-border">
+      <div className="divide-y divide-gray-100">
         {campaigns.map((campaign) => (
           <CampaignRow
             key={campaign.id}
@@ -130,24 +130,24 @@ function CampaignRow({
   return (
     <div>
       {/* Campaign Row */}
-      <div className="grid grid-cols-12 gap-4 px-4 py-3 items-center hover:bg-dashboard-hover transition-colors group">
+      <div className="grid grid-cols-12 gap-4 px-4 py-3 items-center hover:bg-gray-50 transition-colors group">
         {/* Name */}
         <div className="col-span-4 flex items-center gap-2">
           <button
             onClick={onToggle}
-            className="p-1 rounded hover:bg-dashboard-border transition-colors"
+            className="p-1 rounded hover:bg-gray-100 transition-colors"
           >
             {isExpanded ? (
-              <ChevronDown size={16} className="text-gray-400" />
+              <ChevronDown size={16} className="text-gray-500" />
             ) : (
-              <ChevronRight size={16} className="text-gray-400" />
+              <ChevronRight size={16} className="text-gray-500" />
             )}
           </button>
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2">
-              <span className="font-medium text-white truncate">{campaign.name}</span>
+              <span className="font-medium text-gray-900 truncate">{campaign.name}</span>
               {recommendationCount && recommendationCount > 0 && (
-                <span className="flex items-center gap-1 px-1.5 py-0.5 bg-dashboard-warning/20 text-dashboard-warning text-xs rounded-full">
+                <span className="flex items-center gap-1 px-1.5 py-0.5 bg-yellow-100 text-yellow-700 text-xs rounded-full">
                   <AlertTriangle size={10} />
                   {recommendationCount}
                 </span>
@@ -166,29 +166,29 @@ function CampaignRow({
 
         {/* Budget */}
         <div className="col-span-1 text-right">
-          <span className="text-sm text-gray-300">
+          <span className="text-sm text-gray-700">
             {campaign.daily_budget ? formatCurrency(campaign.daily_budget) : '-'}
           </span>
           <span className="text-xs text-gray-500 block">/day</span>
         </div>
 
         {/* Spend */}
-        <div className="col-span-1 text-right text-sm text-white font-medium">
+        <div className="col-span-1 text-right text-sm text-gray-900 font-medium">
           {insights ? formatCurrency(insights.spend) : '-'}
         </div>
 
         {/* Impressions */}
-        <div className="col-span-1 text-right text-sm text-gray-300">
+        <div className="col-span-1 text-right text-sm text-gray-700">
           {insights ? formatNumber(insights.impressions) : '-'}
         </div>
 
         {/* Clicks */}
-        <div className="col-span-1 text-right text-sm text-gray-300">
+        <div className="col-span-1 text-right text-sm text-gray-700">
           {insights ? formatNumber(insights.clicks) : '-'}
         </div>
 
         {/* CTR */}
-        <div className="col-span-1 text-right text-sm text-gray-300">
+        <div className="col-span-1 text-right text-sm text-gray-700">
           {insights ? `${insights.ctr.toFixed(2)}%` : '-'}
         </div>
 
@@ -198,10 +198,10 @@ function CampaignRow({
             <span
               className={`text-sm font-semibold ${
                 insights.roas >= 3
-                  ? 'text-dashboard-success'
+                  ? 'text-green-600'
                   : insights.roas >= 1.5
-                  ? 'text-dashboard-warning'
-                  : 'text-dashboard-danger'
+                  ? 'text-yellow-600'
+                  : 'text-red-600'
               }`}
             >
               {insights.roas.toFixed(2)}x
@@ -215,28 +215,28 @@ function CampaignRow({
         <div className="col-span-1 flex justify-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
           <button
             onClick={onToggleStatus}
-            className="p-1.5 rounded-lg hover:bg-dashboard-border transition-colors"
+            className="p-1.5 rounded-lg hover:bg-gray-100 transition-colors"
             title={campaign.status === 'ACTIVE' ? 'Pause' : 'Activate'}
           >
             {campaign.status === 'ACTIVE' ? (
-              <Pause size={14} className="text-gray-400" />
+              <Pause size={14} className="text-gray-600" />
             ) : (
-              <Play size={14} className="text-gray-400" />
+              <Play size={14} className="text-gray-600" />
             )}
           </button>
           <button
             onClick={onEdit}
-            className="p-1.5 rounded-lg hover:bg-dashboard-border transition-colors"
+            className="p-1.5 rounded-lg hover:bg-gray-100 transition-colors"
             title="Edit"
           >
-            <Edit2 size={14} className="text-gray-400" />
+            <Edit2 size={14} className="text-gray-600" />
           </button>
           <div className="relative">
             <button
               onClick={() => setShowMenu(!showMenu)}
-              className="p-1.5 rounded-lg hover:bg-dashboard-border transition-colors"
+              className="p-1.5 rounded-lg hover:bg-gray-100 transition-colors"
             >
-              <MoreHorizontal size={14} className="text-gray-400" />
+              <MoreHorizontal size={14} className="text-gray-600" />
             </button>
             {showMenu && (
               <>
@@ -244,17 +244,17 @@ function CampaignRow({
                   className="fixed inset-0 z-40"
                   onClick={() => setShowMenu(false)}
                 />
-                <div className="absolute right-0 top-full mt-1 w-40 bg-dashboard-card border border-dashboard-border rounded-lg shadow-xl z-50 py-1">
-                  <button className="w-full flex items-center gap-2 px-3 py-2 text-sm text-gray-300 hover:bg-dashboard-hover">
+                <div className="absolute right-0 top-full mt-1 w-40 bg-white border border-gray-200 rounded-lg shadow-lg z-50 py-1">
+                  <button className="w-full flex items-center gap-2 px-3 py-2 text-sm text-gray-700 hover:bg-gray-50">
                     <Copy size={14} />
                     Duplicate
                   </button>
-                  <button className="w-full flex items-center gap-2 px-3 py-2 text-sm text-gray-300 hover:bg-dashboard-hover">
+                  <button className="w-full flex items-center gap-2 px-3 py-2 text-sm text-gray-700 hover:bg-gray-50">
                     <ExternalLink size={14} />
                     View in Meta
                   </button>
-                  <div className="my-1 border-t border-dashboard-border" />
-                  <button className="w-full flex items-center gap-2 px-3 py-2 text-sm text-dashboard-danger hover:bg-dashboard-hover">
+                  <div className="my-1 border-t border-gray-200" />
+                  <button className="w-full flex items-center gap-2 px-3 py-2 text-sm text-red-600 hover:bg-gray-50">
                     <Trash2 size={14} />
                     Delete
                   </button>
@@ -266,7 +266,7 @@ function CampaignRow({
       </div>
 
       {/* Children (AdSets) */}
-      {isExpanded && <div className="bg-dashboard-bg/30">{children}</div>}
+      {isExpanded && <div className="bg-gray-50">{children}</div>}
     </div>
   );
 }
@@ -296,12 +296,12 @@ function AdSetRow({
   return (
     <div>
       {/* AdSet Row */}
-      <div className="grid grid-cols-12 gap-4 px-4 py-2.5 items-center hover:bg-dashboard-hover/50 transition-colors group border-l-2 border-l-transparent hover:border-l-dashboard-accent/30">
+      <div className="grid grid-cols-12 gap-4 px-4 py-2.5 items-center hover:bg-gray-100 transition-colors group border-l-2 border-l-transparent hover:border-l-green-300">
         {/* Name */}
         <div className="col-span-4 flex items-center gap-2 pl-6">
           <button
             onClick={onToggle}
-            className="p-1 rounded hover:bg-dashboard-border transition-colors"
+            className="p-1 rounded hover:bg-gray-200 transition-colors"
           >
             {isExpanded ? (
               <ChevronDown size={14} className="text-gray-500" />
@@ -309,12 +309,12 @@ function AdSetRow({
               <ChevronRight size={14} className="text-gray-500" />
             )}
           </button>
-          <div className="w-1 h-4 bg-dashboard-border rounded-full" />
+          <div className="w-1 h-4 bg-gray-300 rounded-full" />
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2">
-              <span className="text-sm text-gray-200 truncate">{adset.name}</span>
+              <span className="text-sm text-gray-800 truncate">{adset.name}</span>
               {recommendationCount && recommendationCount > 0 && (
-                <span className="flex items-center gap-1 px-1.5 py-0.5 bg-dashboard-warning/20 text-dashboard-warning text-xs rounded-full">
+                <span className="flex items-center gap-1 px-1.5 py-0.5 bg-yellow-100 text-yellow-700 text-xs rounded-full">
                   <AlertTriangle size={10} />
                   {recommendationCount}
                 </span>
@@ -329,32 +329,32 @@ function AdSetRow({
         </div>
 
         {/* Budget */}
-        <div className="col-span-1 text-right text-sm text-gray-400">
+        <div className="col-span-1 text-right text-sm text-gray-600">
           {adset.daily_budget ? formatCurrency(adset.daily_budget) : '-'}
         </div>
 
         {/* Spend */}
-        <div className="col-span-1 text-right text-sm text-gray-300">
+        <div className="col-span-1 text-right text-sm text-gray-700">
           {insights ? formatCurrency(insights.spend) : '-'}
         </div>
 
         {/* Impressions */}
-        <div className="col-span-1 text-right text-sm text-gray-400">
+        <div className="col-span-1 text-right text-sm text-gray-600">
           {insights ? formatNumber(insights.impressions) : '-'}
         </div>
 
         {/* Clicks */}
-        <div className="col-span-1 text-right text-sm text-gray-400">
+        <div className="col-span-1 text-right text-sm text-gray-600">
           {insights ? formatNumber(insights.clicks) : '-'}
         </div>
 
         {/* CTR */}
-        <div className="col-span-1 text-right text-sm text-gray-400">
+        <div className="col-span-1 text-right text-sm text-gray-600">
           {insights ? `${insights.ctr.toFixed(2)}%` : '-'}
         </div>
 
         {/* ROAS */}
-        <div className="col-span-1 text-right text-sm text-gray-400">
+        <div className="col-span-1 text-right text-sm text-gray-600">
           {insights?.roas ? `${insights.roas.toFixed(2)}x` : '-'}
         </div>
 
@@ -362,19 +362,19 @@ function AdSetRow({
         <div className="col-span-1 flex justify-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
           <button
             onClick={onToggleStatus}
-            className="p-1 rounded hover:bg-dashboard-border transition-colors"
+            className="p-1 rounded hover:bg-gray-200 transition-colors"
           >
             {adset.status === 'ACTIVE' ? (
-              <Pause size={12} className="text-gray-500" />
+              <Pause size={12} className="text-gray-600" />
             ) : (
-              <Play size={12} className="text-gray-500" />
+              <Play size={12} className="text-gray-600" />
             )}
           </button>
           <button
             onClick={onEdit}
-            className="p-1 rounded hover:bg-dashboard-border transition-colors"
+            className="p-1 rounded hover:bg-gray-200 transition-colors"
           >
-            <Edit2 size={12} className="text-gray-500" />
+            <Edit2 size={12} className="text-gray-600" />
           </button>
         </div>
       </div>
@@ -397,15 +397,15 @@ function AdRow({ ad, onEdit, onToggleStatus, recommendationCount }: AdRowProps) 
   const insights = ad.insights;
 
   return (
-    <div className="grid grid-cols-12 gap-4 px-4 py-2 items-center hover:bg-dashboard-hover/30 transition-colors group border-l-2 border-l-transparent hover:border-l-dashboard-accent/20">
+    <div className="grid grid-cols-12 gap-4 px-4 py-2 items-center hover:bg-gray-50 transition-colors group border-l-2 border-l-transparent hover:border-l-green-200">
       {/* Name */}
       <div className="col-span-4 flex items-center gap-2 pl-14">
-        <div className="w-1 h-3 bg-dashboard-border/50 rounded-full" />
+        <div className="w-1 h-3 bg-gray-200 rounded-full" />
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2">
-            <span className="text-xs text-gray-400 truncate">{ad.name}</span>
+            <span className="text-xs text-gray-600 truncate">{ad.name}</span>
             {recommendationCount && recommendationCount > 0 && (
-              <span className="flex items-center gap-1 px-1.5 py-0.5 bg-dashboard-danger/20 text-dashboard-danger text-xs rounded-full">
+              <span className="flex items-center gap-1 px-1.5 py-0.5 bg-red-100 text-red-600 text-xs rounded-full">
                 <AlertTriangle size={10} />
                 {recommendationCount}
               </span>
@@ -423,7 +423,7 @@ function AdRow({ ad, onEdit, onToggleStatus, recommendationCount }: AdRowProps) 
       <div className="col-span-1 text-right text-xs text-gray-500">-</div>
 
       {/* Spend */}
-      <div className="col-span-1 text-right text-xs text-gray-400">
+      <div className="col-span-1 text-right text-xs text-gray-600">
         {insights ? formatCurrency(insights.spend) : '-'}
       </div>
 
@@ -451,19 +451,19 @@ function AdRow({ ad, onEdit, onToggleStatus, recommendationCount }: AdRowProps) 
       <div className="col-span-1 flex justify-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
         <button
           onClick={onToggleStatus}
-          className="p-1 rounded hover:bg-dashboard-border transition-colors"
+          className="p-1 rounded hover:bg-gray-100 transition-colors"
         >
           {ad.status === 'ACTIVE' ? (
-            <Pause size={10} className="text-gray-500" />
+            <Pause size={10} className="text-gray-600" />
           ) : (
-            <Play size={10} className="text-gray-500" />
+            <Play size={10} className="text-gray-600" />
           )}
         </button>
         <button
           onClick={onEdit}
-          className="p-1 rounded hover:bg-dashboard-border transition-colors"
+          className="p-1 rounded hover:bg-gray-100 transition-colors"
         >
-          <Edit2 size={10} className="text-gray-500" />
+          <Edit2 size={10} className="text-gray-600" />
         </button>
       </div>
     </div>
@@ -479,14 +479,22 @@ function StatusBadge({
   size?: 'xs' | 'sm' | 'md';
 }) {
   const sizeClasses = {
-    xs: 'px-1.5 py-0.5 text-[10px]',
-    sm: 'px-2 py-0.5 text-xs',
-    md: 'px-2.5 py-1 text-xs',
+    xs: 'w-2 h-2',
+    sm: 'w-2 h-2',
+    md: 'w-2.5 h-2.5',
   };
 
+  const colorClasses = {
+    ACTIVE: 'bg-green-500',
+    PAUSED: 'bg-yellow-500',
+    default: 'bg-gray-400'
+  };
+
+  const color = status === 'ACTIVE' ? colorClasses.ACTIVE : 
+                status === 'PAUSED' ? colorClasses.PAUSED : 
+                colorClasses.default;
+
   return (
-    <span className={`${sizeClasses[size]} rounded-full font-medium ${getStatusColor(status)}`}>
-      {status === 'ACTIVE' ? 'Active' : status === 'PAUSED' ? 'Paused' : status}
-    </span>
+    <div className={`${sizeClasses[size]} rounded-full ${color}`} title={status} />
   );
 }

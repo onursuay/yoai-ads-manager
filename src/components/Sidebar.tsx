@@ -75,18 +75,18 @@ export default function Sidebar() {
 
   return (
     <aside
-      className={`fixed left-0 top-0 h-screen bg-dashboard-card border-r border-dashboard-border transition-all duration-300 z-40 flex flex-col ${
-        collapsed ? 'w-[72px]' : 'w-[260px]'
+      className={`fixed left-0 top-0 h-screen bg-dashboard-bg border-r border-dashboard-border transition-all duration-300 z-40 flex flex-col ${
+        collapsed ? 'w-[72px]' : 'w-[240px]'
       }`}
     >
       {/* Logo */}
       <div className="h-16 flex items-center px-4 border-b border-dashboard-border">
         <Link href="/dashboard" className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-dashboard-accent to-emerald-600 flex items-center justify-center">
+          <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-dashboard-accent to-emerald-600 flex items-center justify-center">
             <Zap size={22} className="text-dashboard-bg" />
           </div>
           {!collapsed && (
-            <span className="text-xl font-bold gradient-text">YOAİ</span>
+            <span className="text-xl font-bold text-dashboard-text">YOAİ</span>
           )}
         </Link>
       </div>
@@ -98,14 +98,14 @@ export default function Sidebar() {
             <Link
               key={item.href}
               href={item.href}
-              className={`flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-200 group relative ${
+              className={`flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-200 group relative ${
                 isActive(item.href)
-                  ? 'bg-dashboard-accent/10 text-dashboard-accent'
-                  : 'text-gray-400 hover:bg-dashboard-hover hover:text-white'
+                  ? 'bg-dashboard-cardHover text-dashboard-text'
+                  : 'text-dashboard-textSecondary hover:bg-dashboard-card hover:text-dashboard-text'
               }`}
             >
               {isActive(item.href) && (
-                <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-6 bg-dashboard-accent rounded-r-full" />
+                <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-8 bg-dashboard-accent rounded-r-full" />
               )}
               <span className={isActive(item.href) ? 'text-dashboard-accent' : ''}>
                 {item.icon}
@@ -135,7 +135,7 @@ export default function Sidebar() {
         {/* Secondary Navigation */}
         <div className="space-y-1">
           {!collapsed && (
-            <p className="px-3 text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">
+            <p className="px-3 text-xs font-semibold text-dashboard-textMuted uppercase tracking-wider mb-2">
               Assets
             </p>
           )}
@@ -143,10 +143,10 @@ export default function Sidebar() {
             <Link
               key={item.href}
               href={item.href}
-              className={`flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-200 ${
+              className={`flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-200 ${
                 isActive(item.href)
-                  ? 'bg-dashboard-accent/10 text-dashboard-accent'
-                  : 'text-gray-400 hover:bg-dashboard-hover hover:text-white'
+                  ? 'bg-dashboard-cardHover text-dashboard-text'
+                  : 'text-dashboard-textSecondary hover:bg-dashboard-card hover:text-dashboard-text'
               }`}
             >
               {item.icon}
@@ -159,7 +159,7 @@ export default function Sidebar() {
         <div className="mt-6 px-1">
           <Link
             href="/dashboard/campaigns/create"
-            className={`flex items-center justify-center gap-2 py-3 rounded-xl bg-gradient-to-r from-dashboard-accent to-emerald-600 text-dashboard-bg font-semibold transition-all duration-200 hover:shadow-lg hover:shadow-dashboard-accent/30 ${
+            className={`flex items-center justify-center gap-2 py-3 rounded-lg bg-gradient-to-r from-dashboard-accent to-emerald-600 text-dashboard-bg font-semibold transition-all duration-200 hover:shadow-lg hover:shadow-dashboard-accent/30 hover:scale-105 ${
               collapsed ? 'px-3' : 'px-4'
             }`}
           >
@@ -174,8 +174,8 @@ export default function Sidebar() {
         {/* Settings */}
         <Link
           href="/dashboard/settings"
-          className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-gray-400 hover:bg-dashboard-hover hover:text-white transition-all duration-200 ${
-            isActive('/dashboard/settings') ? 'bg-dashboard-hover text-white' : ''
+          className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-dashboard-textSecondary hover:bg-dashboard-card hover:text-dashboard-text transition-all duration-200 ${
+            isActive('/dashboard/settings') ? 'bg-dashboard-card text-dashboard-text' : ''
           }`}
         >
           <Settings size={20} />
@@ -185,7 +185,7 @@ export default function Sidebar() {
         {/* Collapse Toggle */}
         <button
           onClick={() => setCollapsed(!collapsed)}
-          className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-gray-400 hover:bg-dashboard-hover hover:text-white transition-all duration-200 mt-1"
+          className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-dashboard-textSecondary hover:bg-dashboard-card hover:text-dashboard-text transition-all duration-200 mt-1"
         >
           {collapsed ? <ChevronRight size={20} /> : <ChevronLeft size={20} />}
           {!collapsed && <span className="font-medium">Collapse</span>}

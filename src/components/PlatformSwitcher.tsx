@@ -10,7 +10,7 @@ interface PlatformSwitcherProps {
 
 export default function PlatformSwitcher({ selected, onChange }: PlatformSwitcherProps) {
   return (
-    <div className="flex items-center gap-1 p-1 bg-dashboard-bg border border-dashboard-border rounded-xl">
+    <div className="flex items-center gap-1 p-1 bg-gray-100 border border-gray-200 rounded-lg">
       <PlatformButton
         label="All"
         isSelected={selected === 'all'}
@@ -59,19 +59,19 @@ function PlatformButton({
     <button
       onClick={onClick}
       disabled={disabled}
-      className={`relative flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+      className={`relative flex items-center gap-2 px-4 py-2 rounded-md text-sm font-medium transition-all ${
         isSelected
-          ? 'bg-dashboard-card text-white shadow-sm'
-          : 'text-gray-400 hover:text-gray-300'
+          ? 'bg-white text-gray-900 shadow-sm'
+          : 'text-gray-600 hover:text-gray-900'
       } ${disabled ? 'opacity-50 cursor-not-allowed' : ''}`}
     >
       {icon}
       <span>{label}</span>
       {isSelected && !disabled && (
-        <Check size={14} className="text-dashboard-accent" />
+        <Check size={14} className="text-green-600" />
       )}
       {comingSoon && (
-        <span className="absolute -top-2 -right-2 px-1.5 py-0.5 bg-dashboard-warning text-dashboard-bg text-[9px] font-bold rounded-full">
+        <span className="absolute -top-2 -right-2 px-1.5 py-0.5 bg-yellow-500 text-white text-[9px] font-bold rounded-full">
           SOON
         </span>
       )}
@@ -134,28 +134,28 @@ export function ConnectedAccounts({
       <div
         className={`flex items-center gap-2 px-3 py-1.5 rounded-lg border ${
           metaConnected
-            ? 'bg-blue-500/10 border-blue-500/30'
-            : 'bg-dashboard-bg border-dashboard-border opacity-50'
+            ? 'bg-blue-50 border-blue-200'
+            : 'bg-gray-50 border-gray-200 opacity-50'
         }`}
       >
         <MetaIcon />
-        <span className="text-xs font-medium text-gray-300">
+        <span className="text-xs font-medium text-gray-700">
           {metaConnected ? metaAccountName || 'Connected' : 'Not Connected'}
         </span>
         {metaConnected && (
-          <div className="w-2 h-2 rounded-full bg-dashboard-success animate-pulse" />
+          <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
         )}
       </div>
 
       <div
         className={`flex items-center gap-2 px-3 py-1.5 rounded-lg border ${
           googleConnected
-            ? 'bg-red-500/10 border-red-500/30'
-            : 'bg-dashboard-bg border-dashboard-border opacity-50'
+            ? 'bg-red-50 border-red-200'
+            : 'bg-gray-50 border-gray-200 opacity-50'
         }`}
       >
         <GoogleIcon />
-        <span className="text-xs font-medium text-gray-300">
+        <span className="text-xs font-medium text-gray-700">
           {googleConnected ? googleAccountName || 'Connected' : 'Coming Soon'}
         </span>
       </div>
