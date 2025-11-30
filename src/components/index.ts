@@ -5,3 +5,4 @@ export { default as RecommendationsPanel } from './RecommendationsPanel';
 export { default as CampaignTree } from './CampaignTree';
 export { CampaignEditModal, AdSetEditModal, AdEditModal } from './EditModals';
 export { default as PlatformSwitcher, ConnectedAccounts } from './PlatformSwitcher';
+export { default as MetaConnectWizard } from './MetaConnectWizard';
