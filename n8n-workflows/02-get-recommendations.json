@@ -1,0 +1,141 @@
+{
+  "name": "Meta Ads - Get Recommendations",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "meta/recommendations",
+        "options": {}
+      },
+      "id": "webhook-trigger",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [250, 300]
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "=https://graph.facebook.com/v18.0/act_{{ $json.body.ad_account_id }}/adrules_library",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "fields",
+              "value": "id,name,evaluation_spec,execution_spec,status"
+            },
+            {
+              "name": "access_token",
+              "value": "={{ $json.body.access_token }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "get-ad-rules",
+      "name": "Get Ad Rules",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [470, 200]
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "=https://graph.facebook.com/v18.0/act_{{ $json.body.ad_account_id }}/ads",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "fields",
+              "value": "id,name,status,insights{impressions,clicks,ctr,frequency,reach}"
+            },
+            {
+              "name": "filtering",
+              "value": "[{\"field\":\"effective_status\",\"operator\":\"IN\",\"value\":[\"ACTIVE\"]}]"
+            },
+            {
+              "name": "date_preset",
+              "value": "last_7d"
+            },
+            {
+              "name": "access_token",
+              "value": "={{ $json.body.access_token }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "get-ads-for-fatigue",
+      "name": "Get Ads for Fatigue Check",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [470, 400]
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "// Analyze ads for creative fatigue and generate recommendations\nconst ads = $input.all();\nconst recommendations = [];\n\nfor (const item of ads) {\n  const ad = item.json;\n  \n  if (!ad.insights || !ad.insights.data || !ad.insights.data[0]) continue;\n  \n  const insights = ad.insights.data[0];\n  const frequency = parseFloat(insights.frequency) || 0;\n  const ctr = parseFloat(insights.ctr) || 0;\n  \n  // Creative Fatigue Detection\n  // High frequency (>3) + Low CTR (<1%) = Creative Fatigue\n  if (frequency > 3 && ctr < 1) {\n    recommendations.push({\n      id: `rec_fatigue_${ad.id}`,\n      recommendation_type: 'CREATIVE_FATIGUE',\n      title: 'Creative Fatigue Detected',\n      description: `Ad \"${ad.name}\" is showing signs of creative fatigue. Frequency is ${frequency.toFixed(2)} with CTR at ${ctr.toFixed(2)}%. Consider refreshing the creative.`,\n      impact: {\n        metric: 'CTR',\n        current_value: ctr,\n        projected_value: ctr * 1.5,\n        change_percentage: 50\n      },\n      priority: frequency > 5 ? 'HIGH' : 'MEDIUM',\n      entity_type: 'AD',\n      entity_id: ad.id,\n      entity_name: ad.name,\n      suggested_action: {\n        action_type: 'UPDATE_CREATIVE',\n        details: {\n          reason: `Frequency: ${frequency.toFixed(2)}, CTR: ${ctr.toFixed(2)}%`,\n          suggestion: 'Upload new creative or modify existing ad creative'\n        }\n      },\n      applied: false,\n      dismissed: false,\n      created_time: new Date().toISOString()\n    });\n  }\n  \n  // High Performer Detection - Budget Increase Suggestion\n  if (ctr > 3 && frequency < 2) {\n    recommendations.push({\n      id: `rec_budget_${ad.id}`,\n      recommendation_type: 'BUDGET_INCREASE',\n      title: 'High Performer - Increase Budget',\n      description: `Ad \"${ad.name}\" is performing well with ${ctr.toFixed(2)}% CTR. Consider increasing budget to maximize results.`,\n      impact: {\n        metric: 'Conversions',\n        current_value: 100,\n        projected_value: 130,\n        change_percentage: 30\n      },\n      priority: 'MEDIUM',\n      entity_type: 'AD',\n      entity_id: ad.id,\n      entity_name: ad.name,\n      suggested_action: {\n        action_type: 'UPDATE_BUDGET',\n        field: 'daily_budget',\n        details: {\n          suggestion: 'Increase daily budget by 20-30%'\n        }\n      },\n      applied: false,\n      dismissed: false,\n      created_time: new Date().toISOString()\n    });\n  }\n}\n\nreturn recommendations;"
+      },
+      "id": "analyze-fatigue",
+      "name": "Analyze Creative Fatigue",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [690, 400]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $json }}",
+        "options": {}
+      },
+      "id": "respond-webhook",
+      "name": "Respond to Webhook",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [910, 400]
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Get Ad Rules",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Get Ads for Fatigue Check",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Ads for Fatigue Check": {
+      "main": [
+        [
+          {
+            "node": "Analyze Creative Fatigue",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Analyze Creative Fatigue": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  }
+}

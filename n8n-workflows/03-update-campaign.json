@@ -1,0 +1,151 @@
+{
+  "name": "Meta Ads - Update Campaign",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "meta/campaign/update",
+        "options": {}
+      },
+      "id": "webhook-trigger",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [250, 300]
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "// Prepare update payload for Meta API\nconst input = $input.item.json.body;\nconst updates = input.updates;\nconst campaignId = input.campaign_id;\nconst accessToken = input.access_token;\n\n// Build the update object\nconst updatePayload = {};\n\nif (updates.name) {\n  updatePayload.name = updates.name;\n}\n\nif (updates.status) {\n  updatePayload.status = updates.status;\n}\n\nif (updates.daily_budget !== undefined) {\n  // Meta API expects budget in cents\n  updatePayload.daily_budget = Math.round(updates.daily_budget * 100);\n}\n\nif (updates.lifetime_budget !== undefined) {\n  updatePayload.lifetime_budget = Math.round(updates.lifetime_budget * 100);\n}\n\nreturn {\n  campaign_id: campaignId,\n  access_token: accessToken,\n  update_payload: updatePayload\n};"
+      },
+      "id": "prepare-update",
+      "name": "Prepare Update Payload",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [470, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://graph.facebook.com/v18.0/{{ $json.campaign_id }}",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "access_token",
+              "value": "={{ $json.access_token }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify($json.update_payload) }}",
+        "options": {}
+      },
+      "id": "update-campaign",
+      "name": "Update Campaign on Meta",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [690, 300]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": "={{ $json.success }}",
+              "value2": true
+            }
+          ]
+        }
+      },
+      "id": "check-success",
+      "name": "Check Success",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [910, 300]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={\n  \"success\": true,\n  \"message\": \"Campaign updated successfully\",\n  \"campaign_id\": \"{{ $('Prepare Update Payload').item.json.campaign_id }}\"\n}",
+        "options": {}
+      },
+      "id": "respond-success",
+      "name": "Respond Success",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [1130, 200]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={\n  \"success\": false,\n  \"error\": {\n    \"code\": \"UPDATE_FAILED\",\n    \"message\": \"Failed to update campaign: {{ $json.error.message }}\"\n  }\n}",
+        "options": {
+          "responseCode": 400
+        }
+      },
+      "id": "respond-error",
+      "name": "Respond Error",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [1130, 400]
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Prepare Update Payload",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Update Payload": {
+      "main": [
+        [
+          {
+            "node": "Update Campaign on Meta",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Campaign on Meta": {
+      "main": [
+        [
+          {
+            "node": "Check Success",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Success": {
+      "main": [
+        [
+          {
+            "node": "Respond Success",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Respond Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  }
+}

@@ -1,0 +1,245 @@
+{
+  "name": "Meta Ads - Apply Recommendation",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "meta/recommendation/apply",
+        "options": {}
+      },
+      "id": "webhook-trigger",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [250, 300]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{ $json.body.action.action_type }}",
+              "operation": "equals",
+              "value2": "UPDATE_BUDGET"
+            }
+          ]
+        }
+      },
+      "id": "check-action-type",
+      "name": "Check Action Type",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 2,
+      "position": [470, 300],
+      "parameters": {
+        "rules": {
+          "rules": [
+            {
+              "value": "UPDATE_BUDGET",
+              "operation": "equals"
+            },
+            {
+              "value": "UPDATE_STATUS",
+              "operation": "equals"
+            },
+            {
+              "value": "UPDATE_CREATIVE",
+              "operation": "equals"
+            },
+            {
+              "value": "UPDATE_TARGETING",
+              "operation": "equals"
+            }
+          ]
+        },
+        "fallbackOutput": "extra"
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://graph.facebook.com/v18.0/{{ $json.body.entity_id }}",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "access_token",
+              "value": "={{ $json.body.access_token }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"daily_budget\": {{ Math.round($json.body.action.suggested_value * 100) }}\n}",
+        "options": {}
+      },
+      "id": "update-budget",
+      "name": "Update Budget",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [690, 150]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://graph.facebook.com/v18.0/{{ $json.body.entity_id }}",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "access_token",
+              "value": "={{ $json.body.access_token }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"status\": \"{{ $json.body.action.suggested_value }}\"\n}",
+        "options": {}
+      },
+      "id": "update-status",
+      "name": "Update Status",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [690, 300]
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "// For creative updates, we just log the recommendation\n// Actual creative update requires uploading new media\nreturn {\n  success: true,\n  message: 'Creative update recommendation acknowledged. Please upload new creative manually.',\n  entity_id: $json.body.entity_id,\n  recommendation_id: $json.body.recommendation_id\n};"
+      },
+      "id": "handle-creative",
+      "name": "Handle Creative Update",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [690, 450]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://graph.facebook.com/v18.0/{{ $json.body.entity_id }}",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "access_token",
+              "value": "={{ $json.body.access_token }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"targeting\": {{ JSON.stringify($json.body.action.suggested_value) }}\n}",
+        "options": {}
+      },
+      "id": "update-targeting",
+      "name": "Update Targeting",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [690, 600]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={\n  \"success\": true,\n  \"message\": \"Recommendation applied successfully\",\n  \"recommendation_id\": \"{{ $json.body.recommendation_id }}\",\n  \"entity_id\": \"{{ $json.body.entity_id }}\"\n}",
+        "options": {}
+      },
+      "id": "respond-success",
+      "name": "Respond Success",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [910, 300]
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Check Action Type",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Action Type": {
+      "main": [
+        [
+          {
+            "node": "Update Budget",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Update Status",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Handle Creative Update",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Update Targeting",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Budget": {
+      "main": [
+        [
+          {
+            "node": "Respond Success",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Status": {
+      "main": [
+        [
+          {
+            "node": "Respond Success",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Handle Creative Update": {
+      "main": [
+        [
+          {
+            "node": "Respond Success",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Targeting": {
+      "main": [
+        [
+          {
+            "node": "Respond Success",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "name": "yoai-ads-manager",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.86.0",
+    "@types/node": "^24.10.1",
+    "@types/react": "^19.2.7",
+    "autoprefixer": "^10.4.22",
+    "date-fns": "^4.1.0",
+    "lucide-react": "^0.555.0",
+    "next": "^14.0.4",
+    "postcss": "^8.5.6",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "recharts": "^3.5.1",
+    "tailwindcss": "^3.4.0",
+    "typescript": "^5.9.3",
+    "zustand": "^5.0.9"
+  }
+}

@@ -1,0 +1,105 @@
+{
+  "name": "Meta Ads - Get Campaigns",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "meta/campaigns",
+        "options": {}
+      },
+      "id": "webhook-trigger",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [250, 300]
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "=https://graph.facebook.com/v18.0/act_{{ $json.body.ad_account_id }}/campaigns",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "oAuth2Api",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "fields",
+              "value": "id,name,status,objective,daily_budget,lifetime_budget,created_time,updated_time"
+            },
+            {
+              "name": "access_token",
+              "value": "={{ $json.body.access_token }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "get-campaigns",
+      "name": "Get Campaigns",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [470, 300]
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "// Process each campaign and get insights\nconst campaign = $input.item.json;\n\nreturn {\n  id: campaign.id,\n  name: campaign.name,\n  status: campaign.status,\n  objective: campaign.objective,\n  daily_budget: campaign.daily_budget ? parseInt(campaign.daily_budget) / 100 : null,\n  lifetime_budget: campaign.lifetime_budget ? parseInt(campaign.lifetime_budget) / 100 : null,\n  created_time: campaign.created_time,\n  updated_time: campaign.updated_time\n};"
+      },
+      "id": "process-campaigns",
+      "name": "Process Campaigns",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [690, 300]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $json }}",
+        "options": {}
+      },
+      "id": "respond-webhook",
+      "name": "Respond to Webhook",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [910, 300]
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Get Campaigns",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Campaigns": {
+      "main": [
+        [
+          {
+            "node": "Process Campaigns",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Process Campaigns": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  }
+}
